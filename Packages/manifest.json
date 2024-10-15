@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.unity.ai.navigation": "2.0.0",
+    "com.unity.collab-proxy": "2.5.2",
     "com.unity.ide.rider": "3.0.28",
     "com.unity.inputsystem": "1.8.1",
     "com.unity.package-validation-suite": "0.22.0-preview",
@@ -17,10 +18,10 @@
     "com.unity.modules.jsonserialize": "1.0.0",
     "com.unity.modules.particlesystem": "1.0.0",
     "com.unity.modules.physics": "1.0.0",
-    "com.unity.modules.physics2d": "1.0.0",
     "com.unity.modules.screencapture": "1.0.0",
     "com.unity.modules.tilemap": "1.0.0",
     "com.unity.modules.ui": "1.0.0",
-    "com.unity.modules.uielements": "1.0.0"
+    "com.unity.modules.uielements": "1.0.0",
+    "com.unity.modules.vehicles": "1.0.0"
   }
 }

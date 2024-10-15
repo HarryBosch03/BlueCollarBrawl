@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using Runtime.Units;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Vector2 = UnityEngine.Vector2;
@@ -10,7 +11,9 @@ namespace Runtime.Actors
     [RequireComponent(typeof(Rigidbody))]
     public class VehicleController : ActorBehaviour
     {
+        [SpeedUnit(SpeedUnitAttribute.Unit.KmpH)]
         public float maxForwardSpeed;
+        [SpeedUnit(SpeedUnitAttribute.Unit.KmpH)]
         public float maxReverseSpeed;
         public float forwardAcceleration;
         public float reverseAcceleration;
@@ -46,12 +49,23 @@ namespace Runtime.Actors
             if (Physics.Raycast(ray, out var hit, wheelRadius * 2f))
             {
                 var velocity = Vector3.Dot(hit.normal, body.GetPointVelocity(hit.point));
-                var force = hit.normal * Mathf.Max(-velocity, 0f);
+                var normalDv = hit.normal * Mathf.Max(-velocity, 0f) * 0.25f;
 
-                body.linearVelocity += Vector3.Project(force, (hit.point - body.worldCenterOfMass).normalized);
-                body.angularVelocity += Vector3.Cross(hit.point - body.worldCenterOfMass, force);
+                ChangeVelocityAtPoint(normalDv, hit.point);
                 transform.position += Vector3.Project(hit.point - groundPoint, hit.normal);
+                
+                var tangentForcePosition = groundPoint;
+                tangentForcePosition += Vector3.Project(body.worldCenterOfMass - tangentForcePosition, hit.normal);
+                velocity = Vector3.Dot(transform.right, body.GetPointVelocity(tangentForcePosition));
+                var tangentDv = transform.right * -velocity;
+                ChangeVelocityAtPoint(tangentDv, tangentForcePosition);
             }
+        }
+
+        private void ChangeVelocityAtPoint(Vector3 dv, Vector3 point)
+        {
+            body.linearVelocity += dv;
+            body.angularVelocity += Vector3.Cross(point - body.worldCenterOfMass, dv);
         }
 
         private void OnDrawGizmosSelected()
